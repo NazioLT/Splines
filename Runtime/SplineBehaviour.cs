@@ -4,35 +4,52 @@ using UnityEngine;
 
 namespace Nazio_LT.Splines
 {
-    public static class Bezier
-    {
-        public static Vector3 Lerp(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4, float t)
-        {
-            float tCube = Mathf.Pow(t, 3f);
-            float tSquare = t * t;
-
-            Vector3 p1P = (-tCube + 3f * tSquare - 3f * t + 1f) * p1;
-            Vector3 p2P = (3f * tCube - 6f * tSquare + 3f * t) * p2;
-            Vector3 p3P = (-3f * tCube + 3f * tSquare) * p3;
-            Vector3 p4P = tCube * p4;
-
-            return p1P + p2P + p3P + p4P;
-        }
-
-        public static Vector3 Lerp(BezierHandle handle1, BezierHandle handle2, float t)
-        {
-            return Lerp(handle1.Position, handle1.Handle2, handle2.Handle1, handle2.Position, t);
-        }
-    }
-
     public class SplineBehaviour : MonoBehaviour
     {
+        [SerializeField] private bool m_loop = false;
+        [SerializeField, Range(0f, 1f)] private float m_t = 0.5f;
+
         [SerializeField] private BezierHandle[] m_handles;
+
+        public int CurveCount => m_loop ? m_handles.Length : m_handles.Length - 1;
+
+        public BezierHandle GetHandle(int i)
+        {
+            return m_handles[i];
+        }
+
+        public Vector3 Evaluate(float t)
+        {
+            float remapedT = RemapGlobalToLocalT(t, out int curveID);
+
+            return EvaluateCurve(curveID, remapedT);
+        }
+
+        private float RemapGlobalToLocalT(float t, out int curveID)
+        {
+            int curveCount = CurveCount;
+            curveID = Mathf.FloorToInt(t * curveCount);
+
+            float curveTLength = 1f / (float)curveCount;
+            float startCurveValue = curveID * curveTLength;
+
+            float newT = t - startCurveValue;
+
+            return Mathf.InverseLerp(0, curveTLength, newT);
+        }
+
+        private Vector3 EvaluateCurve(int i, float t)
+        {
+            return Bezier.Lerp(m_handles[i], m_handles[i + 1], t);
+        }
 
         private void OnDrawGizmos()
         {
             if (m_handles == null)
                 return;
+
+            Gizmos.color = Color.red * 0.5f;
+            Gizmos.DrawSphere(Evaluate(m_t), 0.3f);
 
             for (var i = 0; i < m_handles.Length; i++)
             {
@@ -49,24 +66,5 @@ namespace Nazio_LT.Splines
                 }
             }
         }
-    }
-
-    [System.Serializable]
-    public struct BezierHandle
-    {
-        public BezierHandle(Vector3 position, Vector3 handleDelta)
-        {
-            m_position = position;
-            m_handle1 = position - handleDelta;
-            m_handle2 = position + handleDelta;
-        }
-
-        [SerializeField] private Vector3 m_position;
-        [SerializeField] private Vector3 m_handle1;
-        [SerializeField] private Vector3 m_handle2;
-
-        public Vector3 Position => m_position;
-        public Vector3 Handle1 => m_handle1;
-        public Vector3 Handle2 => m_handle2;
     }
 }
