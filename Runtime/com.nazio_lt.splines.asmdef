@@ -1,0 +1,14 @@
+{
+    "name": "com.nazio_lt.splines",
+    "rootNamespace": "Nazio_LT.Splines",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
