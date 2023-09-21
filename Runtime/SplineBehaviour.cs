@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,7 +21,8 @@ namespace Nazio_LT.Splines
 
         public Vector3 Evaluate(float t)
         {
-            float remapedT = RemapGlobalToLocalT(t, out int curveID);
+            float clampedT = Mathf.Clamp(t, 0f, 0.9999f);
+            float remapedT = RemapGlobalToLocalT(clampedT, out int curveID);
 
             return EvaluateCurve(curveID, remapedT);
         }

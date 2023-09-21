@@ -1,30 +1,10 @@
 {
     "name": "com.nazio_lt.splines.editor",
-    "rootNamespace": "Nazio_LT.Splines",
+    "rootNamespace": "Nazio_LT.Splines.Editor",
     "references": [
         "GUID:21a8c9ba0efc7874b9dbe557f20b8bcf"
     ],
-    "includePlatforms": [
-        "Android",
-        "EmbeddedLinux",
-        "GameCoreScarlett",
-        "GameCoreXboxOne",
-        "iOS",
-        "LinuxStandalone64",
-        "CloudRendering",
-        "Lumin",
-        "macOSStandalone",
-        "PS4",
-        "PS5",
-        "Stadia",
-        "Switch",
-        "tvOS",
-        "WSA",
-        "WebGL",
-        "WindowsStandalone32",
-        "WindowsStandalone64",
-        "XboxOne"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
