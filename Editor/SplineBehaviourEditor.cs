@@ -10,19 +10,63 @@ namespace Nazio_LT.Splines.Editor
     public class SplineBehaviourEditor : UnityEditor.Editor
     {
         private SplineBehaviour m_splineBehaviour = null;
-        
+
+        private int curveSelected = int.MaxValue;
+
         private void OnEnable()
         {
             m_splineBehaviour = target as SplineBehaviour;
+            curveSelected = int.MaxValue;
         }
 
         private void OnSceneGUI()
         {
-            int curveCount = m_splineBehaviour.CurveCount;
-            for (int i = 0; i < curveCount; i++)
+            DisplayHandleButtons();
+            DisplayCurve();
+
+            if (curveSelected == int.MaxValue)
+                return;
+
+            DisplayCurrentHandle();
+        }
+
+        private void DisplayHandleButtons()
+        {
+            for (int i = 0; i < m_splineBehaviour.HandleCount; i++)
+            {
+                if (curveSelected == i)
+                    continue;
+
+                Splines.BezierHandle handle1 = m_splineBehaviour.GetHandle(i);
+                bool handlePerformed = Handles.Button(handle1.Position, Quaternion.identity, 0.2f, 0.2f,
+                    Handles.CubeHandleCap);
+
+                if (handlePerformed)
+                    curveSelected = i;
+            }
+        }
+
+        private void DisplayCurve()
+        {
+            for (int i = 0; i < m_splineBehaviour.CurveCount; i++)
             {
                 Splines.BezierHandle handle1 = m_splineBehaviour.GetHandle(i);
+                Splines.BezierHandle handle2 = m_splineBehaviour.GetHandle(i + 1);
+                
+                Handles.DrawBezier(handle1.Position, handle2.Position, handle1.HandleDelta2, handle2.HandleDelta1, Color.magenta, Texture2D.whiteTexture, 1f);
             }
+        }
+
+        private void DisplayCurrentHandle()
+        {
+            Splines.BezierHandle handle = m_splineBehaviour.GetHandle(curveSelected);
+            Vector3 position = Handles.PositionHandle(handle.Position, Quaternion.identity);
+            Vector3 handle1 = Handles.PositionHandle(handle.HandleDelta1, Quaternion.identity);
+            Vector3 handle2 = Handles.PositionHandle(handle.HandleDelta2, Quaternion.identity);
+            
+            handle.UpdatePosition(Handles.PositionHandle(handle.Position, Quaternion.identity));
+            handle.UpdateHandlePosition(true, handle1);
+            handle.UpdateHandlePosition(false, handle2);
         }
     }
 }

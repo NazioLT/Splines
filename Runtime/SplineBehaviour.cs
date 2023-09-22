@@ -13,6 +13,7 @@ namespace Nazio_LT.Splines
         [SerializeField] private BezierHandle[] m_handles;
 
         public int CurveCount => m_loop ? m_handles.Length : m_handles.Length - 1;
+        public int HandleCount => m_handles.Length;
 
         public BezierHandle GetHandle(int i)
         {
@@ -47,6 +48,8 @@ namespace Nazio_LT.Splines
 
         private void OnDrawGizmos()
         {
+            return;
+            
             if (m_handles == null)
                 return;
 
