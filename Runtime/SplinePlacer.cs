@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace Nazio_LT.Splines
@@ -10,10 +11,15 @@ namespace Nazio_LT.Splines
     {
         [SerializeField] private SplineBehaviour m_spline = null;
 
-        [Space] [SerializeField] private bool m_placeUniform = true;
-
+        [Space] 
+        [SerializeField] private bool m_placeUniform = true;
+        [SerializeField] private float m_distanceBetweenElements = 1f;
+        
         private void Update()
         {
+            if(Application.isPlaying)
+                return;
+            
             if (m_spline)
                 HandleUpdatePlacer();
         }
@@ -33,7 +39,7 @@ namespace Nazio_LT.Splines
                 if (m_placeUniform)
                     childToPlace.position = m_spline.EvaluateUniform(distancePerObject * i);
                 else 
-                    childToPlace.position = m_spline.EvaluateDistance(1f * i);
+                    childToPlace.position = m_spline.EvaluateDistance(m_distanceBetweenElements * i);
             }
         }
     }

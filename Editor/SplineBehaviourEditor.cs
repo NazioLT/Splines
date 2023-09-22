@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -65,7 +62,7 @@ namespace Nazio_LT.Splines.Editor
             Vector3 handle1 = Handles.PositionHandle(handle.Handle1, Quaternion.identity);
             Vector3 handle2 = Handles.PositionHandle(handle.Handle2, Quaternion.identity);
 
-            handle.UpdatePosition(Handles.PositionHandle(handle.Position, Quaternion.identity));
+            handle.UpdatePosition(position);
 
             if (Vector3.Distance(handle.Handle1, handle1) > 0.01f)
                 handle.UpdateHandlePosition(true, handle1);

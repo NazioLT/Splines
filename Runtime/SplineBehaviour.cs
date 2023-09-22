@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Nazio_LT.Splines
@@ -9,18 +6,17 @@ namespace Nazio_LT.Splines
     public class SplineBehaviour : MonoBehaviour
     {
         [SerializeField] private bool m_loop = false;
-        [SerializeField, Range(0f, 1f)] private float m_t = 0.5f;
 
         [SerializeField] private BezierHandle[] m_handles;
 
         private float[] m_simplifiedDistances;
         private float m_splineLength = 0f;
-        
+
         private const int PARAMETERIZATION_PRECISION = 100;
 
         public int CurveCount => m_loop ? m_handles.Length : m_handles.Length - 1;
         public int HandleCount => m_handles.Length;
-        
+
         private int m_parameterization => PARAMETERIZATION_PRECISION * CurveCount;
 
         public BezierHandle GetHandle(int i)
@@ -94,14 +90,17 @@ namespace Nazio_LT.Splines
             m_splineLength = m_simplifiedDistances[m_parameterization];
         }
 
-        private void Update()
+        private void Awake()
         {
             SimplifyCurve();
         }
 
-        private void OnDrawGizmos()
+        private void Update()
         {
-            Gizmos.DrawSphere(Evaluate(m_t), 0.2f);
+            if (Application.isPlaying)
+                return;
+
+            SimplifyCurve();
         }
     }
 }
