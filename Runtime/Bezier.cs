@@ -19,7 +19,7 @@ namespace Nazio_LT.Splines
 
         public static Vector3 Lerp(BezierHandle handle1, BezierHandle handle2, float t)
         {
-            return Lerp(handle1.Position, handle1.HandleDelta2, handle2.HandleDelta1, handle2.Position, t);
+            return Lerp(handle1.Position, handle1.Handle2, handle2.Handle1, handle2.Position, t);
         }
     }
 }

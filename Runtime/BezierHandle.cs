@@ -19,8 +19,8 @@ namespace Nazio_LT.Splines
         [SerializeField] private bool m_locked = true;
 
         public Vector3 Position => m_position;
-        public Vector3 HandleDelta1 => m_position + m_handleDelta1;
-        public Vector3 HandleDelta2 => m_position + m_handleDelta2;
+        public Vector3 Handle1 => m_position + m_handleDelta1;
+        public Vector3 Handle2 => m_position + m_handleDelta2;
 
         public void UpdatePosition(Vector3 position)
         {
@@ -30,28 +30,26 @@ namespace Nazio_LT.Splines
         public void UpdateHandlePosition(bool firstHandle, Vector3 position)
         {
             Vector3 delta = position - m_position;
-
-            if (!m_locked)
-            {
-                if (firstHandle)
-                {
-                    m_handleDelta1 = delta;
-                }
-                else
-                {
-                    m_handleDelta2 = delta;
-                }
-
-                return;
-            }
+            Debug.Log(firstHandle);
 
             if (firstHandle)
             {
-                UpdateLockedHandleDelta(ref m_handleDelta1, ref m_handleDelta2, delta);
+                UpdateHandle(ref m_handleDelta1, ref m_handleDelta2, delta);
                 return;
             }
 
-            UpdateLockedHandleDelta(ref m_handleDelta2, ref m_handleDelta1, delta);
+            UpdateHandle(ref m_handleDelta2, ref m_handleDelta1, delta);
+        }
+
+        private void UpdateHandle(ref Vector3 handle, ref Vector3 otherHandle, Vector3 delta)
+        {
+            if (m_locked)
+            {
+                UpdateLockedHandleDelta(ref handle, ref otherHandle, delta);
+                return;
+            }
+
+            handle = delta;
         }
 
         private void UpdateLockedHandleDelta(ref Vector3 leadHandle, ref Vector3 followHandle, Vector3 delta)

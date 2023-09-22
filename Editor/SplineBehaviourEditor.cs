@@ -52,8 +52,9 @@ namespace Nazio_LT.Splines.Editor
             {
                 Splines.BezierHandle handle1 = m_splineBehaviour.GetHandle(i);
                 Splines.BezierHandle handle2 = m_splineBehaviour.GetHandle(i + 1);
-                
-                Handles.DrawBezier(handle1.Position, handle2.Position, handle1.HandleDelta2, handle2.HandleDelta1, Color.magenta, Texture2D.whiteTexture, 1f);
+
+                Handles.DrawBezier(handle1.Position, handle2.Position, handle1.Handle2, handle2.Handle1, Color.magenta,
+                    Texture2D.whiteTexture, 1f);
             }
         }
 
@@ -61,12 +62,16 @@ namespace Nazio_LT.Splines.Editor
         {
             Splines.BezierHandle handle = m_splineBehaviour.GetHandle(curveSelected);
             Vector3 position = Handles.PositionHandle(handle.Position, Quaternion.identity);
-            Vector3 handle1 = Handles.PositionHandle(handle.HandleDelta1, Quaternion.identity);
-            Vector3 handle2 = Handles.PositionHandle(handle.HandleDelta2, Quaternion.identity);
-            
+            Vector3 handle1 = Handles.PositionHandle(handle.Handle1, Quaternion.identity);
+            Vector3 handle2 = Handles.PositionHandle(handle.Handle2, Quaternion.identity);
+
             handle.UpdatePosition(Handles.PositionHandle(handle.Position, Quaternion.identity));
-            handle.UpdateHandlePosition(true, handle1);
-            handle.UpdateHandlePosition(false, handle2);
+
+            if (Vector3.Distance(handle.Handle1, handle1) > 0.01f)
+                handle.UpdateHandlePosition(true, handle1);
+
+            else if (Vector3.Distance(handle.Handle2, handle2) > 0.01f)
+                handle.UpdateHandlePosition(false, handle2);
         }
     }
 }

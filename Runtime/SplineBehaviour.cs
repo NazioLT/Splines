@@ -45,31 +45,5 @@ namespace Nazio_LT.Splines
         {
             return Bezier.Lerp(m_handles[i], m_handles[i + 1], t);
         }
-
-        private void OnDrawGizmos()
-        {
-            return;
-            
-            if (m_handles == null)
-                return;
-
-            Gizmos.color = Color.red * 0.5f;
-            Gizmos.DrawSphere(Evaluate(m_t), 0.3f);
-
-            for (var i = 0; i < m_handles.Length; i++)
-            {
-                Gizmos.color = Color.red;
-                Gizmos.DrawSphere(m_handles[i].Position, 0.2f);
-
-                if (i == 0)
-                    continue;
-
-                Gizmos.color = Color.white;
-                for (var j = 0; j < 30; j++)
-                {
-                    Gizmos.DrawSphere(Bezier.Lerp(m_handles[i - 1], m_handles[i], (float)j / 30f), 0.2f);
-                }
-            }
-        }
     }
 }
