@@ -30,7 +30,6 @@ namespace Nazio_LT.Splines
         public void UpdateHandlePosition(bool firstHandle, Vector3 position)
         {
             Vector3 delta = position - m_position;
-            Debug.Log(firstHandle);
 
             if (firstHandle)
             {

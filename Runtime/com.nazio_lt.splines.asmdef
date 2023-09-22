@@ -1,7 +1,9 @@
 {
     "name": "com.nazio_lt.splines",
     "rootNamespace": "Nazio_LT.Splines",
-    "references": [],
+    "references": [
+        "GUID:a99df13097c3db843bfa5021ba44cefc"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

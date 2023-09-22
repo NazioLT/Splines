@@ -27,7 +27,7 @@ namespace Nazio_LT.Splines
             for (int i = 0; i < objectCount; i++)
             {
                 Transform childToPlace = transform.GetChild(i);
-                childToPlace.position = m_spline.Evaluate(distancePerObject * i);
+                childToPlace.position = m_spline.EvaluateUniform(distancePerObject * i);
             }
         }
     }
