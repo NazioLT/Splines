@@ -17,7 +17,9 @@ namespace Nazio_LT.Splines
 
         public BezierHandle GetHandle(int i)
         {
-            return m_handles[i];
+            int index = m_loop ? i % CurveCount : i;
+            
+            return m_handles[index];
         }
 
         public Vector3 Evaluate(float t)
@@ -43,7 +45,12 @@ namespace Nazio_LT.Splines
 
         private Vector3 EvaluateCurve(int i, float t)
         {
-            return Bezier.Lerp(m_handles[i], m_handles[i + 1], t);
+            return Bezier.Lerp(GetHandle(i), GetHandle(i + 1), t);
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawSphere(Evaluate(m_t), 0.2f);
         }
     }
 }
