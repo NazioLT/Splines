@@ -61,6 +61,9 @@ namespace Nazio_LT.Splines.Editor
             Vector3 position = Handles.PositionHandle(handle.Position, Quaternion.identity);
             Vector3 handle1 = Handles.PositionHandle(handle.Handle1, Quaternion.identity);
             Vector3 handle2 = Handles.PositionHandle(handle.Handle2, Quaternion.identity);
+            
+            Handles.DrawLine(position, handle1, 1f);
+            Handles.DrawLine(position, handle2);
 
             handle.UpdatePosition(position);
 
