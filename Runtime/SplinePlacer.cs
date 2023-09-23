@@ -12,7 +12,7 @@ namespace Nazio_LT.Splines
         [SerializeField] private SplineBehaviour m_spline = null;
 
         [Space] 
-        [SerializeField] private bool m_placeUniform = true;
+        [SerializeField] private SplineEvaluationMethod m_EvaluationMethod = SplineEvaluationMethod.Normal;
         [SerializeField] private float m_distanceBetweenElements = 1f;
 
         private void Update()
@@ -36,24 +36,10 @@ namespace Nazio_LT.Splines
             {
                 Transform childToPlace = transform.GetChild(i);
 
-                float t = m_placeUniform ? distancePerObject * i : m_distanceBetweenElements * i;
+                float t = m_EvaluationMethod == SplineEvaluationMethod.Distance ? m_distanceBetweenElements * i : distancePerObject * i;
 
-                Vector3 position = m_placeUniform
-                    ? m_spline.EvaluateUniform(t)
-                    : m_spline.EvaluateDistance(t);
-
-                Vector3 forward = Vector3.zero;
-                if (m_placeUniform)
-                {
-                    m_spline.DirectionUniform(t, out forward, out _, out _);
-                }
-                else
-                {
-                    m_spline.DirectionDistance(t, out forward, out _, out _);
-                }
-
-                childToPlace.position = position;
-                childToPlace.localRotation = Quaternion.LookRotation(forward, Vector3.up);
+                childToPlace.position = m_spline.EvaluatePoint(t, m_EvaluationMethod);
+                childToPlace.localRotation = m_spline.EvaluateRotation(t, m_EvaluationMethod);
             }
         }
     }

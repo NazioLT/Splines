@@ -2,6 +2,13 @@ using UnityEngine;
 
 namespace Nazio_LT.Splines
 {
+    public enum SplineEvaluationMethod
+    {
+        Normal = 0,
+        Uniform = 1,
+        Distance= 2
+    }
+    
     [ExecuteInEditMode]
     public class SplineBehaviour : MonoBehaviour
     {
@@ -29,7 +36,17 @@ namespace Nazio_LT.Splines
 
         #region Evaluate
 
-        public Vector3 Evaluate(float t)
+        public Vector3 EvaluatePoint(float value, SplineEvaluationMethod method)
+        {
+            return method switch
+            {
+                SplineEvaluationMethod.Normal => Evaluate(value),
+                SplineEvaluationMethod.Distance => EvaluateDistance(value),
+                SplineEvaluationMethod.Uniform => EvaluateUniform(value),
+            };
+        }
+
+        private Vector3 Evaluate(float t)
         {
             float clampedT = Mathf.Clamp(t, 0f, 0.9999f);
             float remapedT = RemapGlobalToLocalT(clampedT, out int curveID);
@@ -37,13 +54,13 @@ namespace Nazio_LT.Splines
             return EvaluateCurve(curveID, remapedT);
         }
 
-        public Vector3 EvaluateDistance(float distance)
+        private Vector3 EvaluateDistance(float distance)
         {
             float t = distance == m_splineLength ? 1f : SampleDistanceToT(distance);
             return Evaluate(t);
         }
 
-        public Vector3 EvaluateUniform(float t)
+        private Vector3 EvaluateUniform(float t)
         {
             return EvaluateDistance(t * m_splineLength);
         }
@@ -52,24 +69,53 @@ namespace Nazio_LT.Splines
 
         #region Direction
 
-        public void Direction(float t, out Vector3 forward, out Vector3 up, out Vector3 right)
+        public void EvaluateDirections(float value, SplineEvaluationMethod method, out Vector3 forward, out Vector3 up, out Vector3 right)
+        {
+            switch(method)
+            {
+                case SplineEvaluationMethod.Distance: 
+                    DirectionDistance(value, out forward, out up, out right); 
+                    break;
+                
+                case SplineEvaluationMethod.Uniform: 
+                    DirectionUniform(value, out forward, out up, out right); 
+                    break;
+                
+                default:
+                    Direction(value, out forward, out up, out right); 
+                    break;
+            };
+        }
+        
+        private void Direction(float t, out Vector3 forward, out Vector3 up, out Vector3 right)
         {
             forward = Forward(t).normalized;
             up = Up(t).normalized;
             right = Vector3.Cross(forward, up).normalized;
         }
         
-        public void DirectionDistance(float distance, out Vector3 forward, out Vector3 up, out Vector3 right)
+        private void DirectionDistance(float distance, out Vector3 forward, out Vector3 up, out Vector3 right)
         {
             float t = distance == m_splineLength ? 1f : SampleDistanceToT(distance);
             Direction(t, out forward, out up, out right);
         }
         
-        public void DirectionUniform(float t, out Vector3 forward, out Vector3 up, out Vector3 right)
+        private void DirectionUniform(float t, out Vector3 forward, out Vector3 up, out Vector3 right)
         {
             DirectionDistance(t * m_splineLength, out forward, out up, out right);
         }
         
+        #endregion
+
+        #region Rotations
+
+        public Quaternion EvaluateRotation(float value, SplineEvaluationMethod method)
+        {
+            EvaluateDirections(value, method, out Vector3 forward, out Vector3 up, out Vector3 right);
+            
+            return Quaternion.LookRotation(forward);
+        }
+
         #endregion
 
         private Vector3 Forward(float t)

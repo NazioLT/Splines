@@ -6,13 +6,13 @@ namespace Nazio_LT.Splines.Editor
     public class SplinePlacerEditor : UnityEditor.Editor
     {
         private SerializedProperty m_spline = null;
-        private SerializedProperty m_placeUniform = null;
+        private SerializedProperty m_EvaluationMethod = null;
         private SerializedProperty m_distanceBetweenElements = null;
         
         private void OnEnable()
         {
             m_spline = serializedObject.FindProperty("m_spline");
-            m_placeUniform = serializedObject.FindProperty("m_placeUniform");
+            m_EvaluationMethod = serializedObject.FindProperty("m_EvaluationMethod");
             m_distanceBetweenElements = serializedObject.FindProperty("m_distanceBetweenElements");
         }
 
@@ -22,9 +22,9 @@ namespace Nazio_LT.Splines.Editor
             
             EditorGUILayout.Space();
             
-            EditorGUILayout.PropertyField(m_placeUniform);
+            EditorGUILayout.PropertyField(m_EvaluationMethod);
 
-            if (!m_placeUniform.boolValue)
+            if (m_EvaluationMethod.intValue == (int)SplineEvaluationMethod.Distance)
             {
                 EditorGUILayout.PropertyField(m_distanceBetweenElements);
             }
