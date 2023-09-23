@@ -1,0 +1,20 @@
+{
+    "name": "com.nazio_lt.splines",
+    "version": "1.0.0",
+    "displayName": "Nazio_LT Splines",
+    "description": "Nazio_LT's splines package.",
+    "unity": "2021.3",
+    "author": {
+        "name": "Henno Théo",
+        "email": "theo.henno21@gmail.com",
+        "url": "https://linktr.ee/hennotheo"
+    },
+    "dependencies": {
+        "com.nazio_lt.ncore": "1.2.7"
+    },
+    "changelogUrl": "https://github.com/NazioLT/NZCore/blob/main/CHANGELOG.md",
+    "keywords": [
+        "tool",
+        "splines"
+    ]
+}

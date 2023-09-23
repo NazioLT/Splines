@@ -69,7 +69,6 @@ namespace Nazio_LT.Splines.Editor
 
             if (Vector3.Distance(handle.Handle1, handle1) > 0.01f)
                 handle.UpdateHandlePosition(true, handle1);
-
             else if (Vector3.Distance(handle.Handle2, handle2) > 0.01f)
                 handle.UpdateHandlePosition(false, handle2);
         }
