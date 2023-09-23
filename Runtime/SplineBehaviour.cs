@@ -17,6 +17,7 @@ namespace Nazio_LT.Splines
         public int CurveCount => m_loop ? m_handles.Length : m_handles.Length - 1;
         public int HandleCount => m_handles.Length;
 
+        private float m_factor => 1f / (float)CurveCount;
         private int m_parameterization => PARAMETERIZATION_PRECISION * CurveCount;
 
         public BezierHandle GetHandle(int i)
@@ -25,6 +26,8 @@ namespace Nazio_LT.Splines
 
             return m_handles[index];
         }
+
+        #region Evaluate
 
         public Vector3 Evaluate(float t)
         {
@@ -44,6 +47,40 @@ namespace Nazio_LT.Splines
         {
             return EvaluateDistance(t * m_splineLength);
         }
+
+        #endregion
+
+        #region Direction
+
+        public void Direction(float t, out Vector3 forward, out Vector3 up, out Vector3 right)
+        {
+            forward = Forward(t).normalized;
+            up = Up(t).normalized;
+            right = Vector3.Cross(forward, up).normalized;
+        }
+        
+        public void DirectionDistance(float distance, out Vector3 forward, out Vector3 up, out Vector3 right)
+        {
+            float t = distance == m_splineLength ? 1f : SampleDistanceToT(distance);
+            Direction(t, out forward, out up, out right);
+        }
+        
+        public void DirectionUniform(float t, out Vector3 forward, out Vector3 up, out Vector3 right)
+        {
+            DirectionDistance(t * m_splineLength, out forward, out up, out right);
+        }
+        
+        #endregion
+
+        private Vector3 Forward(float t)
+        {
+            float clampedT = Mathf.Clamp(t, 0f, 0.9999f);
+            float remapedT = RemapGlobalToLocalT(clampedT, out int curveID);
+
+            return Bezier.Derivative(GetHandle(curveID), GetHandle(curveID + 1), remapedT);
+        }
+
+        private Vector3 Up(float t) => Vector3.up;
 
         private float SampleDistanceToT(float distance)
         {

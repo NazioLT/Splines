@@ -40,5 +40,23 @@ namespace Nazio_LT.Splines
 
             return 0;
         }
+        
+        public static Vector3 Derivative(BezierHandle handle1, BezierHandle handle2, float t)
+        {
+            return Derivative(handle1.Position, handle1.Handle2, handle2.Handle1, handle2.Position, t);
+        }
+        
+        /// <summary>Compute squared Bezier derivative at t value.</summary>
+        public static Vector3 Derivative(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4, float t)
+        {
+            float _tSquare = t * t;
+
+            Vector3 p1P = (-3f * _tSquare + 6f * t - 3f) * p1;
+            Vector3 p2P = (9f * _tSquare - 12f * t + 3f) * p2;
+            Vector3 p3P = (-9f * _tSquare + 6f * t) * p3;
+            Vector3 p4P = 3f * _tSquare * p4;
+
+            return p1P + p2P + p3P + p4P;
+        }
     }
 }
