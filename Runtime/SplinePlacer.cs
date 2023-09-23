@@ -15,6 +15,11 @@ namespace Nazio_LT.Splines
         [SerializeField] private SplineEvaluationMethod m_EvaluationMethod = SplineEvaluationMethod.Normal;
         [SerializeField] private float m_distanceBetweenElements = 1f;
 
+        [Space] 
+        [SerializeField] private bool m_lockXRotation = true;
+        [SerializeField] private bool m_lockYRotation = true;
+        [SerializeField] private bool m_lockZRotation = true;
+
         private void Update()
         {
             if (Application.isPlaying)
@@ -39,7 +44,12 @@ namespace Nazio_LT.Splines
                 float t = m_EvaluationMethod == SplineEvaluationMethod.Distance ? m_distanceBetweenElements * i : distancePerObject * i;
 
                 childToPlace.position = m_spline.EvaluatePoint(t, m_EvaluationMethod);
-                childToPlace.localRotation = m_spline.EvaluateRotation(t, m_EvaluationMethod);
+                Vector3 localEulerAngles = m_spline.EvaluateRotation(t, m_EvaluationMethod).eulerAngles;
+                Vector3 lastEulerAngles = childToPlace.localEulerAngles;
+                childToPlace.localEulerAngles = new Vector3(
+                    m_lockXRotation ? localEulerAngles.x : lastEulerAngles.x, 
+                    m_lockYRotation ? localEulerAngles.y : lastEulerAngles.y, 
+                    m_lockZRotation ? localEulerAngles.z : lastEulerAngles.z);
             }
         }
     }

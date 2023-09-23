@@ -23,8 +23,7 @@ namespace Nazio_LT.Splines
 
         public int CurveCount => m_loop ? m_handles.Length : m_handles.Length - 1;
         public int HandleCount => m_handles.Length;
-
-        private float m_factor => 1f / (float)CurveCount;
+        
         private int m_parameterization => PARAMETERIZATION_PRECISION * CurveCount;
 
         public BezierHandle GetHandle(int i)
@@ -40,9 +39,9 @@ namespace Nazio_LT.Splines
         {
             return method switch
             {
-                SplineEvaluationMethod.Normal => Evaluate(value),
                 SplineEvaluationMethod.Distance => EvaluateDistance(value),
                 SplineEvaluationMethod.Uniform => EvaluateUniform(value),
+                (SplineEvaluationMethod)default => Evaluate(value),
             };
         }
 
